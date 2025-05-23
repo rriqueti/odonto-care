@@ -9,22 +9,14 @@ let auth = new AuthMiddleware();
 let ctrl = new AuthenticationController();
 let user = new ProfessionalController();
 
-
+router.get("/auth", (req, res) => {
+  return res.status(200).json({ message: "API de autenticação" });
+});
 router.post("/auth/token", (req, res) => {
   // #swagger.tags = ['Autenticação']
   // #swagger.summary = "Gera um JWT para validação de acesso"
 
   ctrl.token(req, res);
 });
-
-router.get("/auth/perfil", auth.validar, (req, res) => {
-  /* #swagger.security = [{
-       "bearerAuth": []
-   }] */
-  // #swagger.tags = ['Autenticação']
-  // #swagger.summary = "Lista as informações do perfil logado"
-
-  user.perfil(req, res);
-})
 
 export default router;

@@ -13,7 +13,6 @@ const __dirname = path.dirname(__filename);
 import http from "http";
 const server = http.createServer(app);
 import { errorHandler, catchError } from "./middlewares/ExceptionMiddleware.js";
-import { Server } from "socket.io";
 dotenv.config();
 
 
@@ -31,10 +30,8 @@ app.use(express.json());
 
 app.use(express.static(__dirname + "/public"));
 
-app.use("/", catchError(categoriaItemRouter));
-
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(outputJson));
-app.use("/", catchError(professionalRoute));
+// app.use("/", catchError(professionalRoute));
 app.use("/", catchError(authRoute));
 
 
