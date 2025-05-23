@@ -1,8 +1,8 @@
 import express from 'express';
-import UsuarioController from '../controllers/usuarioController.js';
+import ProfessionalController from '../controllers/ProfessionalController.js';
 const router = express.Router();
 
-let ctrl = new UsuarioController();
+let ctrl = new ProfessionalController();
 
 router.post('/usuarios', (req,res) => {
     // #swagger.tags = ["Usuarios"]

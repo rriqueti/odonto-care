@@ -1,4 +1,4 @@
-export default class UsuarioEntity {
+export default class ProfessionalEntity {
     #id 
     #email
     #nome

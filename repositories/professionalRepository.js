@@ -1,53 +1,66 @@
-import { resolveObjectURL } from "buffer";
 import Database from "../db/database.js";
-import UsuarioEntity from "../entities/usuarioEntity.js";
+import ProfessionalEntity from "../entities/professionalEntity.js";
 
-export default class UsuarioRepository {
+export default class ProfessionalRepository {
   #database;
 
   constructor() {
     this.#database = new Database();
   }
 
-  async create(usuario) {
+  async create(profissional) {
     let sql = `
-            INSERT INTO tb_usuario (
-                usu_email, 
-                usu_nome, 
-                usu_senha, 
-                usu_datacadastro
-            ) VALUES (
-                ?, ?, ?, ?
-            );`;
+      INSERT INTO tbProfissional (
+        nomeCompleto, 
+        CPF, 
+        email, 
+        dataNascimento, 
+        status, 
+        password, 
+        tbCargo_idCargo
+      ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?
+      );`;
 
-    let data = new Date();
-
-    let values = [usuario.email, usuario.nome, usuario.senha, data];
+    let values = [
+      profissional.nomeCompleto,
+      profissional.CPF,
+      profissional.email,
+      profissional.dataNascimento,
+      profissional.status,
+      profissional.password,
+      profissional.tbCargo_idCargo,
+    ];
 
     let result = await this.#database.ExecutaComandoNonQuery(sql, values);
 
     return result;
   }
 
+
   async listar() {
-    let sql = `SELECT * FROM tb_usuario WHERE usu_status = 1;`;
+    let sql = `SELECT * FROM tbProfissional WHERE status = 1;`;
 
     let result = await this.#database.ExecutaComando(sql);
 
     let arr = [];
 
-    for (const usuario of result) {
+    for (const profissional of result) {
       arr.push({
-        id: usuario.usu_id,
-        email: usuario.usu_email,
-        nome: usuario.usu_nome,
-        senha: usuario.usu_senha,
-        datacadastro: usuario.usu_datacadastro,
+        id: profissional.idProfissional,
+        nome: profissional.nomeCompleto,
+        cpf: profissional.CPF,
+        email: profissional.email,
+        dataNascimento: profissional.dataNascimento,
+        status: profissional.status,
+        password: profissional.password,
+        tbCargo_idCargo: profissional.tbCargo_idCargo
       });
     }
 
     return arr;
   }
+
 
   async alterar(usuario) {
     let sql = `UPDATE tb_usuario SET usu_email = ?, usu_nome = ?, usu_senha = ? WHERE usu_id = ?;`;
@@ -77,7 +90,7 @@ export default class UsuarioRepository {
     if (rows.length > 0) {
       let row = rows[0];
       lista.push(
-        new UsuarioEntity(
+        new ProfessionalEntity(
           row["usu_id"],
           row["usu_email"],
           row["usu_nome"],
@@ -90,7 +103,7 @@ export default class UsuarioRepository {
     return null;
   }
 
-  async retornarHash(email) {
+  async holdPassword(email) {
     const sql = `SELECT usu_senha FROM tb_usuario WHERE usu_email = ?`;
     const valores = [email];
     const result = await this.#database.ExecutaComando(sql, valores);
@@ -103,7 +116,7 @@ export default class UsuarioRepository {
     return null;
   }
 
-  async ValidarAcesso(email, senha) {
+  async authValidate(email, password) {
     let sql = `SELECT * FROM tb_usuario WHERE usu_email = ? AND usu_senha = ?`;
     let valores = [email, senha];
     let rows = await this.#database.ExecutaComando(sql, valores);
