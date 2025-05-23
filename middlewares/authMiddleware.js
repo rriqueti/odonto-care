@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
-import UsuarioRepository from "../repositories/usuarioRepository.js";
+import ProfessionalRepository from "../repositories/ProfessionalRepository.js";
 const SECRET = "@@S3GR3D0@@";
 
 export default class AuthMiddleware {
-  gerarToken(id, email, nome, datacadastro) {
+  tokenGenerate(id, email, nome, datacadastro) {
     return jwt.sign(
       { id: id, email: email, nome: nome, datacadastro: datacadastro },
       SECRET,
@@ -26,13 +26,13 @@ export default class AuthMiddleware {
         if(ex.name == "TokenExpiredError") {
           usuarioToken = jwt.verify(token, SECRET, {ignoreExpiration: true})
           let auth = new AuthMiddleware();
-          let novoToken = auth.gerarToken(usuarioToken.id, usuarioToken.email, usuarioToken.nome, usuarioToken.datacadastro)
+          let novoToken = auth.tokenGenerate(usuarioToken.id, usuarioToken.email, usuarioToken.nome, usuarioToken.datacadastro)
           res.set["authorization"] = `Bearer ${novoToken}`;
           tokenValido = true;
         } else return res.status(401).json({ msg: "Usuario não autorizado" });
       }
       if (tokenValido) {
-        let repoUsuario = new UsuarioRepository();
+        let repoUsuario = new ProfessionalRepository();
         let usuarioBanco = await repoUsuario.ObterUsuarioLogin(usuarioToken.id);
         if (usuarioBanco.length > 0) {
           if (usuarioBanco[0]) {

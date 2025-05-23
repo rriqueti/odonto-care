@@ -148,16 +148,7 @@ const outputJson = "./swagger-output.json";
 
 const routes = [
   "./routes/authRoute.js",
-  "./routes/usuarioRoute.js",
-  "./routes/classificadoRoute.js",
-  "./routes/categoriaItemRoute.js",
-  "./routes/salvoRoute.js",
-  "./routes/filtroRoute.js",
-  "./routes/condicaoRoute.js",
-  "./routes/tipoImovelRoute.js",
-  './routes/tipoClassificadoRoute.js',
-  './routes/modeloVeiculoRoute.js',
-  './routes/cidadeRoute.js'
+  "./routes/professionalRoute.js",
 ];
 
 swaggerAutogen({ openapi: "3.0.0", autoHeaders: false })(

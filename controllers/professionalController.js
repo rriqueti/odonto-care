@@ -1,18 +1,18 @@
-import { gerarHash } from "../hash/hashUtils.js";
-import UsuarioEntity from "../entities/usuarioEntity.js";
-import UsuarioRepository from "../repositories/usuarioRepository.js";
+import { hashGenerate } from "../hash/hashUtils.js";
+import ProfessionalEntity from "../entities/professionalEntity.js";
+import ProfessionalRepository from "../repositories/ProfessionalRepository.js";
 
-export default class UsuarioController {
+export default class ProfessionalController {
   #repoUsuario;
   constructor() {
-    this.#repoUsuario = new UsuarioRepository();
+    this.#repoUsuario = new ProfessionalRepository();
   }
 
   async create(req, res) {
     let { email, nome, senha } = req.body;
     if (email && nome && senha) {
-      let passwordHash = await gerarHash(senha);
-      let usuario = new UsuarioEntity(0, email, nome, passwordHash);
+      let passwordHash = await hashGenerate(senha);
+      let usuario = new ProfessionalEntity(0, email, nome, passwordHash);
       if (await this.#repoUsuario.create(usuario))
         return res.status(201).json({ msg: "Usuario criado!" });
       else throw new Error("Erro ao cadastrar usuario no banco de dados");
