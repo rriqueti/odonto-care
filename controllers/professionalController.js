@@ -1,31 +1,15 @@
 import { hashGenerate } from "../hash/hashUtils.js";
-import { z } from "zod";
+
 import ProfessionalEntity from "../entities/professionalEntity.js";
 import ProfessionalRepository from "../repositories/ProfessionalRepository.js";
 
 export default class ProfessionalController {
   #professionalRepository;
+  #professionalEntity;
 
   constructor() {
     this.#professionalRepository = new ProfessionalRepository();
-  }
-
-  //colocar em ProfessionalEntity
-  async dataValidate({ params }) {
-    const Profesionals = z.object({
-      name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
-      cpf: z.string().length(11, "O CPF deve ter 11 caracteres"),
-      email: z.string().email("Campo de e-mail inválido"),
-      dateOfBirth: z.string().regex(/^\d{2}-\d{2}-\d{4}$/, "Data de nascimento inválida"),
-      password: z.string().min(3, "A senha deve ter pelo menos 6 caracteres"),
-
-    })
-
-    if (!Profesionals.parse(params).success) {
-      return res.status(400).json({ error: "Dados inválidos." });
-    }
-
-    return params;
+    this.#professionalEntity = new ProfessionalEntity();
   }
 
   async create(req, res) {
@@ -33,7 +17,7 @@ export default class ProfessionalController {
 
     console.log("Dados recebidos:", req.body);
 
-    let checkInputData = await this.dataValidate({ name, cpf, email, dateOfBirth, password });
+    let checkInputData = await this.#professionalEntity.dataValidate({ name, cpf, email, dateOfBirth, password });
 
     if (checkInputData.error || !position) {
       return res.status(400).json({ error: checkInputData.error });

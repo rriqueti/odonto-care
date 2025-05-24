@@ -17,6 +17,7 @@ dotenv.config();
 
 
 import authRoute from "./routes/authRoute.js"
+import professionalRoute from "./routes/professionalRoute.js";
 
 
 app.use(cors({
@@ -31,7 +32,7 @@ app.use(express.json());
 app.use(express.static(__dirname + "/public"));
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(outputJson));
-// app.use("/", catchError(professionalRoute));
+app.use("/", catchError(professionalRoute));
 app.use("/", catchError(authRoute));
 
 
