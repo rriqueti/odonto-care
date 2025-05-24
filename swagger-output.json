@@ -55,7 +55,7 @@
         }
       }
     },
-    "/usuarios": {
+    "/professionals/create": {
       "post": {
         "tags": [
           "Usuarios"
@@ -76,13 +76,22 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "name": {
+                    "example": "any"
+                  },
+                  "cpf": {
+                    "example": "any"
+                  },
                   "email": {
                     "example": "any"
                   },
-                  "nome": {
+                  "dateOfBirth": {
                     "example": "any"
                   },
-                  "senha": {
+                  "password": {
+                    "example": "any"
+                  },
+                  "position": {
                     "example": "any"
                   }
                 }
