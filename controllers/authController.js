@@ -1,6 +1,6 @@
 import AuthMiddleware from "../middlewares/authMiddleware.js";
-import ProfessionalRepository from "../repositories/professionalRepository.js";
-import { hashGenerate, passwordCheck } from "../hash/hashUtils.js";
+import ProfessionalRepository from "../repositories/ProfessionalRepository.js";
+import { passwordCheck } from "../hash/hashUtils.js";
 import { z } from "zod";
 
 export default class AuthController {
@@ -13,6 +13,8 @@ export default class AuthController {
   async token(req, res) {
     let { email, password } = req.body;
 
+
+    // corrigir esse zod aqui
     const emailValidation = z.string().email('Campo de e-mail inválido')
 
     const senhaSchema = z.string().min(3, "A senha deve ter pelo menos 3 caracteres")

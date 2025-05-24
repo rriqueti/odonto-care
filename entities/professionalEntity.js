@@ -1,55 +1,77 @@
-export default class ProfessionalEntity {
-    #id 
-    #email
-    #nome
-    #senha
-    #datacadastro
+export default class ProfessionalEntity extends BaseEntity {
+    #id;
+    #name;
+    #cpf;
+    #email;
+    #dateOfBirth;
+    #hashedPassword;
+    #position;
 
-    constructor(id, email, nome, senha, datacadastro){
+    constructor(id = 0, name, cpf, email, dateOfBirth, hashedPassword, position) {
         this.#id = id;
+        this.#name = name;
+        this.#cpf = cpf;
         this.#email = email;
-        this.#nome = nome;
-        this.#senha = senha;
-        this.#datacadastro = datacadastro;
+        this.#dateOfBirth = dateOfBirth;
+        this.#hashedPassword = hashedPassword;
+        this.#position = position;
     }
 
-    get id(){
+    // Getters
+    get id() {
         return this.#id;
     }
 
-    set id(value){
-        this.#id = value;
+    get name() {
+        return this.#name;
     }
 
-    get email(){
+    get cpf() {
+        return this.#cpf;
+    }
+
+    get email() {
         return this.#email;
     }
 
-    set email(value){
+    get dateOfBirth() {
+        return this.#dateOfBirth;
+    }
+
+    get hashedPassword() {
+        return this.#hashedPassword;
+    }
+
+    get position() {
+        return this.#position;
+    }
+
+    // Setters
+    set id(value) {
+        this.#id = value;
+    }
+
+    set name(value) {
+        this.#name = value;
+    }
+
+    set cpf(value) {
+        this.#cpf = value;
+    }
+
+    set email(value) {
         this.#email = value;
     }
 
-    get nome(){
-        return this.#nome;
+    set dateOfBirth(value) {
+        this.#dateOfBirth = value;
     }
 
-    set nome(value){
-        this.#nome = value;
+    set hashedPassword(value) {
+        this.#hashedPassword = value;
     }
 
-    get senha(){
-        return this.#senha;
-    }
-
-    set senha(value){
-        this.#senha = value;
-    }
-
-    get datacadastro(){
-        return this.#datacadastro;
-    }
-
-    set datacadastro(value){
-        this.#datacadastro = value;
+    set position(value) {
+        this.#position = value;
     }
 }
