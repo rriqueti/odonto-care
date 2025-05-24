@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export default class ProfessionalEntity extends BaseEntity {
     #id;
     #name;
@@ -73,5 +75,22 @@ export default class ProfessionalEntity extends BaseEntity {
 
     set position(value) {
         this.#position = value;
+    }
+
+    async dataValidate({ params }) {
+        const Profesionals = z.object({
+            name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
+            cpf: z.string().length(11, "O CPF deve ter 11 caracteres"),
+            email: z.string().email("Campo de e-mail inválido"),
+            dateOfBirth: z.string().regex(/^\d{2}-\d{2}-\d{4}$/, "Data de nascimento inválida"),
+            password: z.string().min(3, "A senha deve ter pelo menos 6 caracteres"),
+
+        })
+
+        if (!Profesionals.parse(params).success) {
+            return res.status(400).json({ error: "Dados inválidos." });
+        }
+
+        return params;
     }
 }
