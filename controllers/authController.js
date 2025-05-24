@@ -1,6 +1,6 @@
 import AuthMiddleware from "../middlewares/authMiddleware.js";
 import ProfessionalRepository from "../repositories/ProfessionalRepository.js";
-import { passwordCheck } from "../hash/hashUtils.js";
+import { passwordCheck } from "../utils/hashUtils.js";
 import { z } from "zod";
 
 export default class AuthController {

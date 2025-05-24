@@ -1,4 +1,4 @@
-import { hashGenerate } from "../hash/hashUtils.js";
+import { hashGenerate } from "../utils/hashUtils.js";
 
 import ProfessionalEntity from "../entities/professionalEntity.js";
 import ProfessionalRepository from "../repositories/ProfessionalRepository.js";
@@ -19,9 +19,7 @@ export default class ProfessionalController {
 
     let checkInputData = await this.#professionalEntity.dataValidate({ name, cpf, email, dateOfBirth, password });
 
-    if (checkInputData.error || !position) {
-      return res.status(400).json({ error: checkInputData.error });
-    }
+    if (checkInputData.error || !position) return res.status(400).json({ error: checkInputData.error })
 
     let hashedPassword = await hashGenerate(password);
 
@@ -37,12 +35,9 @@ export default class ProfessionalController {
 
     let createdProfessional = await this.#professionalRepository.create(professionalUser);
 
-    if (createdProfessional) {
-      return res.status(201).json({ msg: "Usuario criado!" });
-    }
+    if (createdProfessional) return res.status(201).json({ msg: "Usuario criado!" });
 
     else throw new Error("Erro ao cadastrar usuario no banco de dados");
-
   }
 
   async perfil(req, res) {

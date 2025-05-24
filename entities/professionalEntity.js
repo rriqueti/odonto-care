@@ -1,4 +1,5 @@
 import { z } from "zod";
+import BaseEntity from "./BaseEntity.js";
 
 export default class ProfessionalEntity extends BaseEntity {
     #id;
@@ -10,6 +11,7 @@ export default class ProfessionalEntity extends BaseEntity {
     #position;
 
     constructor(id = 0, name, cpf, email, dateOfBirth, hashedPassword, position) {
+        super();
         this.#id = id;
         this.#name = name;
         this.#cpf = cpf;

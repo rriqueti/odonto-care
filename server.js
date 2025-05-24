@@ -32,12 +32,25 @@ app.use(express.json());
 app.use(express.static(__dirname + "/public"));
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(outputJson));
-app.use("/", catchError(professionalRoute));
-app.use("/", catchError(authRoute));
+app.use("/", professionalRoute);
+app.use("/", authRoute);
 
 
 app.use(errorHandler);
 
-app.listen("5000", function () {
-  console.log("backend em execução, localhost:5000/");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
+
+// Captura erros não tratados para evitar crash
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
+  // Pode reiniciar o processo aqui ou tomar outra ação
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection:", reason);
+  // Pode reiniciar o processo aqui ou tomar outra ação
 });
