@@ -86,13 +86,16 @@ export default class ProfessionalEntity extends BaseEntity {
             email: z.string().email("Campo de e-mail inválido"),
             dateOfBirth: z.string().regex(/^\d{2}-\d{2}-\d{4}$/, "Data de nascimento inválida"),
             password: z.string().min(3, "A senha deve ter pelo menos 6 caracteres"),
-
+            position: z.number().int().positive("Cargo inválido"),
         })
 
-        if (!Profesionals.parse(params).success) {
-            return res.status(400).json({ error: "Dados inválidos." });
-        }
+        let result = Profesionals.safeParse(params)
 
+        if (!result.success) {
+            console.log(result.error.format());
+            return result.error.format()
+        }
+        
         return params;
     }
 }

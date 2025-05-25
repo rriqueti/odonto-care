@@ -1,7 +1,7 @@
 import { hashGenerate } from "../utils/hashUtils.js";
 
 import ProfessionalEntity from "../entities/professionalEntity.js";
-import ProfessionalRepository from "../repositories/ProfessionalRepository.js";
+import ProfessionalRepository from "../repositories/professionalRepository.js";
 
 export default class ProfessionalController {
   #professionalRepository;

@@ -26,7 +26,7 @@ export default class ProfessionalRepository {
       professional.cpf,
       professional.email,
       professional.dateOfBirth,
-      1, // status ativo por padrão ao criar
+      1,
       professional.hashedPassword,
       professional.position,
     ];
