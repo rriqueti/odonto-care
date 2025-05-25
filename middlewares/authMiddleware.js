@@ -1,49 +1,57 @@
 import jwt from "jsonwebtoken";
-import ProfessionalRepository from "../repositories/ProfessionalRepository.js";
-const SECRET = "@@S3GR3D0@@";
+import ProfessionalRepository from "../repositories/professionalRepository.js";
+
+const SECRET = process.env.JWT_SECRET || "@@S3GR3D0@@";
+const TOKEN_EXPIRES_IN = "2h"; // use string para clareza e padrão do JWT
 
 export default class AuthMiddleware {
-  tokenGenerate(id, email, nome, datacadastro) {
-    return jwt.sign(
-      { id: id, email: email, nome: nome, datacadastro: datacadastro },
-      SECRET,
-      { expiresIn: 10000 }
-    );
+  generateToken(id, email, nome, cargo, datacadastro) {
+    return jwt.sign({ id, email, nome, cargo, datacadastro }, SECRET, {
+      expiresIn: TOKEN_EXPIRES_IN,
+    });
   }
 
-  async validar(req, res, next) {
-    if (req.headers.authorization == null)
+  static async validate(req, res, next) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
       return res.status(401).json({ msg: "Token de acesso não foi enviado!" });
+    }
 
-    let token = req.headers["authorization"].split(" ")[1];
-    if (token) {
-      let usuarioToken = null;
-      let tokenValido = false;
-      try {
-        usuarioToken = jwt.verify(token, SECRET);
-        tokenValido = true;
-      } catch(ex) {
-        if(ex.name == "TokenExpiredError") {
-          usuarioToken = jwt.verify(token, SECRET, {ignoreExpiration: true})
-          let auth = new AuthMiddleware();
-          let novoToken = auth.tokenGenerate(usuarioToken.id, usuarioToken.email, usuarioToken.nome, usuarioToken.datacadastro)
-          res.set["authorization"] = `Bearer ${novoToken}`;
-          tokenValido = true;
-        } else return res.status(401).json({ msg: "Usuario não autorizado" });
-      }
-      if (tokenValido) {
-        let repoUsuario = new ProfessionalRepository();
-        let usuarioBanco = await repoUsuario.ObterUsuarioLogin(usuarioToken.id);
-        if (usuarioBanco.length > 0) {
-          if (usuarioBanco[0]) {
-            req.usuarioLogado = usuarioBanco[0];
-            next();
-          } else {
-            res.status(401).json({ msg: "Usuario não autorizado" });
-          }
-        } else res.status(401).json({ msg: "Usuario não inexistente!" });
-      }
+    const [, token] = authHeader.split(" ");
 
-    } else res.status(401).json({ msg: "Usuario não inexistente!" });
+    if (!token) {
+      return res.status(401).json({ msg: "Token de acesso ausente!" });
+    }
+
+    let usuarioToken;
+
+    try {
+      usuarioToken = jwt.verify(token, SECRET);
+    } catch (err) {
+      if (err.name === "TokenExpiredError") {
+        try {
+          usuarioToken = jwt.verify(token, SECRET, { ignoreExpiration: true });
+          // Reemissão automática do token (opcional, considerar riscos)
+          const novoToken = AuthMiddleware.generateToken(usuarioToken);
+          res.setHeader("authorization", `Bearer ${novoToken}`);
+        } catch {
+          return res.status(401).json({ msg: "Token inválido" });
+        }
+      } else {
+        return res.status(401).json({ msg: "Token inválido" });
+      }
+    }
+
+    // Busca usuário no banco
+    const repoUsuario = new ProfessionalRepository();
+    const usuarioBanco = await repoUsuario.ObterUsuarioLogin(usuarioToken.id);
+
+    if (!usuarioBanco || usuarioBanco.length === 0) {
+      return res.status(401).json({ msg: "Usuário inexistente!" });
+    }
+
+    req.usuarioLogado = usuarioBanco[0];
+    next();
   }
 }

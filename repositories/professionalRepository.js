@@ -1,3 +1,4 @@
+import { th } from "zod/v4/locales";
 import Database from "../db/database.js";
 import ProfessionalEntity from "../entities/professionalEntity.js";
 
@@ -26,7 +27,7 @@ export default class ProfessionalRepository {
       professional.cpf,
       professional.email,
       professional.dateOfBirth,
-      1, // status ativo por padrão ao criar
+      1,
       professional.hashedPassword,
       professional.position,
     ];
@@ -109,14 +110,14 @@ export default class ProfessionalRepository {
   }
 
   async getPasswordByEmail(email) {
-    const sql = `SELECT password FROM tbProfissional WHERE email = ?`;
+
+    const sql = `SELECT * FROM tbProfissional WHERE email = ? ORDER BY idProfissional DESC LIMIT 1`;
     const values = [email];
     const result = await this.#database.ExecutaComando(sql, values);
 
-    if (result.length > 0) {
-      return result[0]["password"];
-    }
-    return null;
+    if(result) return result[0]
+
+    throw new Error("Profissional não encontrado");
   }
 
   async validateAuth(email, password) {
