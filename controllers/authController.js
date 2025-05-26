@@ -35,12 +35,17 @@ export default class AuthController {
         let authMiddleware = new AuthMiddleware();
 
         let token = authMiddleware.generateToken(user.idProfissional,
-                                                user.email,
-                                                user.nomeCompleto,
-                                                user.tbCargo_idCargo,
-                                                user.timestamp_cadastro);
+          user.email,
+          user.nomeCompleto,
+          user.tbCargo_idCargo,
+          user.timestamp_cadastro);
 
-        return res.status(200).json({ token: token });
+        return res.status(200).json({
+          token: token, id: user.idProfissional,
+          email: user.email,
+          nome: user.nomeCompleto,
+          cargo: user.tbCargo_idCargo,
+        });
       }
     }
   }
