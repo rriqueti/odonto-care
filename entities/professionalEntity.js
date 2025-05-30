@@ -79,13 +79,13 @@ export default class ProfessionalEntity extends BaseEntity {
         this.#position = value;
     }
 
-    async dataValidate({ params }) {
+    async dataCreateValidate({ params }) {
         const Profesionals = z.object({
             name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
             cpf: z.string().length(11, "O CPF deve ter 11 caracteres"),
             email: z.string().email("Campo de e-mail inválido"),
             dateOfBirth: z.string().regex(/^\d{2}-\d{2}-\d{4}$/, "Data de nascimento inválida"),
-            password: z.string().min(3, "A senha deve ter pelo menos 6 caracteres"),
+            password: z.string().min(3, "A senha deve ter pelo menos 3 caracteres"),
             position: z.number().int().positive("Cargo inválido"),
         })
 
@@ -97,5 +97,23 @@ export default class ProfessionalEntity extends BaseEntity {
         }
         
         return params;
+    }
+
+    async dataUpdateValidate({ params }){
+        const Profesionals = z.object({
+            id: z.number().int().position("Id inválido"),
+            name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
+            position: z.number().int().positive("Cargo inválido"),
+            password: z.string().min(3, "A senha deve ter pelo menos 3 caracteres"),
+
+        });
+
+        let result = Profesionals.safeParse(params);
+
+        if(!result.success){
+            return result.error.format()
+        }
+
+        return params
     }
 }
