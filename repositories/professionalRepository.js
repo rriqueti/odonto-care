@@ -1,4 +1,3 @@
-import { th } from "zod/v4/locales";
 import Database from "../db/database.js";
 import ProfessionalEntity from "../entities/professionalEntity.js";
 
